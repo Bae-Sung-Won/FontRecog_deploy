@@ -62,3 +62,10 @@ typing_extensions==4.8.0
 tzdata==2024.1
 urllib3==1.26.13
 watchdog==4.0.0
+--index-url https://download.pytorch.org/whl/cu118
+torch==2.1.2+cu118
+--index-url https://download.pytorch.org/whl/cu118
+torchaudio==2.1.2+cu118
+--index-url https://download.pytorch.org/whl/cu118
+torchvision==0.16.2+cu118
+
