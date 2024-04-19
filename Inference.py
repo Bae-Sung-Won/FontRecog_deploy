@@ -24,8 +24,8 @@ from stqdm import stqdm
 import warnings 
 warnings.filterwarnings('ignore')
 
-print(torch.cuda.get_device_name(0),',', torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu'))
-print(torch.__version__)
+# print(torch.cuda.get_device_name(0),',', torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu'))
+# print(torch.__version__)
 
 def save_upload_file(directory, file):
     if not os.path.exists(directory):
