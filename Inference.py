@@ -254,26 +254,25 @@ def app():
             a2 = []
             a3 = []
             for i in stqdm(location, desc='This is slow task'):
-                mse = []
-                cos = []
-                ss = []
-                for j in location:
-                    paths = os.path.join(recon_data, os.path.splitext(j)[0], os.path.basename(image))
                     path = os.path.join(os.getcwd(), 'dataset', 'regist', i)
-                    time.sleep(0.5)
-                    print(path)
-                    fixed, moving, _ = get_registration(paths, path)           # # fixed를 기준으로, moving 이미지를 변환
-                    fixed, moving = sitk.GetArrayFromImage(fixed), sitk.GetArrayFromImage(moving)
-                    mse_top, cos_top, ss_top = metrics(fixed, moving).rank()
-                    mse.append((os.path.splitext(j)[0] +'_'+ os.path.basename(image), mse_top))
-                    cos.append((os.path.splitext(j)[0] +'_'+ os.path.basename(image), cos_top))
-                    ss.append((os.path.splitext(j)[0] +'_'+ os.path.basename(image), ss_top))
-                mse = {z1 : z2 for z1, z2 in mse}
-                cos = {z1 : z2 for z1, z2 in cos}
-                ss = {z1 : z2 for z1, z2 in ss}
-                a1.append(mse)
-                a2.append(cos)
-                a3.append(ss)
+                    mse = []
+                    cos = []
+                    ss = []
+                    for j in location:
+                        paths = os.path.join(recon_data, os.path.splitext(j)[0], os.path.basename(image))
+                        fixed, moving, _ = get_registration(paths, path)           # # fixed를 기준으로, moving 이미지를 변환
+                        fixed, moving = sitk.GetArrayFromImage(fixed), sitk.GetArrayFromImage(moving)
+                        mse_top, cos_top, ss_top = metrics(fixed, moving).rank()
+                        mse.append((os.path.splitext(j)[0] +'_'+ os.path.basename(image), mse_top))
+                        cos.append((os.path.splitext(j)[0] +'_'+ os.path.basename(image), cos_top))
+                        ss.append((os.path.splitext(j)[0] +'_'+ os.path.basename(image), ss_top))
+                    mse = {z1 : z2 for z1, z2 in mse}
+                    cos = {z1 : z2 for z1, z2 in cos}
+                    ss = {z1 : z2 for z1, z2 in ss}
+                    a1.append(mse)
+                    a2.append(cos)
+                    a3.append(ss)
+
 
             best_score1 = np.inf
             best_score2 = 0
