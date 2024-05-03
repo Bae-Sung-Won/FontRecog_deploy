@@ -88,6 +88,8 @@ def app():
     st.markdown("<h1 style='text-align: center; color: black;'>Font Classification</h1>", unsafe_allow_html=True)
     st.subheader(":blue[When restarting, be sure to press F5.] :sunglasses:", divider='rainbow')
     st.write(os.getcwd())
+    st.write(os.listdir(os.getcwd()))
+    st.write(os.listdir(os.path.join(os.getcwd(), 'dataset')))
 
     st.write('한글 이름의 이미지 파일을 업로드 하세요. Ex) 가.bmp, 가.png ...')
     image = st.file_uploader('이미지를 업로드 하세요.', type=['png', 'bmp', 'jpg', 'jpeg'])
