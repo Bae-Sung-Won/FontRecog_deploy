@@ -87,8 +87,7 @@ def app():
 
     st.markdown("<h1 style='text-align: center; color: black;'>Font Classification</h1>", unsafe_allow_html=True)
     st.subheader(":blue[When restarting, be sure to press F5.] :sunglasses:", divider='rainbow')
-    st.write(os.listdir(os.path.join(os.getcwd(), 'dataset')))
-
+    
     st.write('한글 이름의 이미지 파일을 업로드 하세요. Ex) 가.bmp, 가.png ...')
     image = st.file_uploader('이미지를 업로드 하세요.', type=['png', 'bmp', 'jpg', 'jpeg'])
 
@@ -184,7 +183,7 @@ def app():
                 print(f'Selected device: {device}')
                 model = autoencoders()
                 model.to(device)
-                model.load_state_dict(torch.load('./model/autoencoder.pt'))
+                model.load_state_dict(torch.load('./model/autoencoder.pt', map_location=device))
 
                 # 4.2 복원 진행 후, 레지스트 폴더에 저장
                 transform = transforms.Compose([transforms.ToTensor()])      # tensor 형태로 변환.
@@ -210,7 +209,7 @@ def app():
                 model.eval()
                 with torch.no_grad():
                     x_hat = []  # test_loader pred
-                    for index, image_batch in enumerate(test_loader):
+                    for index, image_batch in stqdm(enumerate(test_loader), desc='model running'):
                         image_batch = image_batch.to(device)
                         pred = model(image_batch)
                         x_hat += [pred]
@@ -438,6 +437,7 @@ def app():
 
     else:
         st.error("Please drag and drop file.")
+        st.write(os.listdir(os.path.join(os.getcwd(), 'dataset')))
         if os.path.isdir(os.path.join(os.getcwd(), 'dataset', '레지스트')):
             shutil.rmtree(os.path.join(os.getcwd(), 'dataset', '레지스트'))
 
