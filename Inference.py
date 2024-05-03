@@ -259,9 +259,9 @@ def app():
                 ss = []
                 time.sleep(0.1)
                 for j in location:
+                    time.sleep(0.1)
                     paths = os.path.join(recon_data, os.path.splitext(j)[0], os.path.basename(image))
                     path = os.path.join(os.getcwd(), 'dataset', '레지스트', i)
-                    st.image(path, width=300, caption= i)
                     fixed, moving, _ = get_registration(paths, path)           # # fixed를 기준으로, moving 이미지를 변환
                     fixed, moving = sitk.GetArrayFromImage(fixed), sitk.GetArrayFromImage(moving)
                     mse_top, cos_top, ss_top = metrics(fixed, moving).rank()
