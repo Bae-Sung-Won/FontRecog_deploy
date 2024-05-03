@@ -202,14 +202,17 @@ def app():
                 test = []
                 for i in location:
                     test.append(transform(process_image(os.path.join(os.getcwd(), 'dataset', '레지스트') + '/' + i)))            
-                test = CustomDataset(test)                                                
-                test_loader = DataLoader(test, batch_size=1, shuffle=False)                       # DataLoader 넣기.
+                test = CustomDataset(test)
+                if torch.cuda.is_available():
+                    test_loader = DataLoader(test, batch_size=16, shuffle=False)                       # gpu면, batch 16
+                else:
+                    test_loader = DataLoader(test, batch_size=1, shuffle=False)                       # cpu면, batch 1
 
                 # reconstruction image 생성.
                 model.eval()
                 with torch.no_grad():
                     x_hat = []  # test_loader pred
-                    for index, image_batch in stqdm(enumerate(test_loader), desc='model running'):
+                    for index, image_batch in stqdm(enumerate(test_loader), desc='model running ...'):
                         image_batch = image_batch.to(device)
                         pred = model(image_batch)
                         x_hat += [pred]
@@ -252,6 +255,7 @@ def app():
             a1 = []
             a2 = []
             a3 = []
+            st.write(location)
             for i in stqdm(location, desc='This is slow task'):
                 mse = []
                 cos = []
