@@ -59,7 +59,7 @@ def s1(paths):
     return sang_im, im, im0                   # sang_im은 생짜 이미지,  im은 전처리 이미지, im0은 trace_skeleton 이미지를 return
 
 def save(file, name):
-    path = os.path.join(os.getcwd(), 'dataset', '레지스트', name)
+    path = os.path.join(os.getcwd(), 'dataset', 'regist', name)
     type = os.path.splitext(path)[1]
     result, encoded_img = cv2.imencode(type, file)
     if result:
@@ -158,8 +158,8 @@ def app():
             st.image(image, width=300, caption= 'preprocessing data')
 
         # 3. 12개의 class에 존재하는 해당 글자와 모두 Registration을 진행 후, 레지스트 폴더에 저장
-        if not os.path.exists(os.path.join('dataset', '레지스트')):
-            os.makedirs(os.path.join('dataset', '레지스트'))
+        if not os.path.exists(os.path.join('dataset', 'regist')):
+            os.makedirs(os.path.join('dataset', 'regist'))
             for i in stqdm(recon_data_numbers, desc='In registering ...'):
                 location = os.listdir(os.path.join(recon_data, i))
                 if os.path.basename(image) in location:
@@ -185,7 +185,7 @@ def app():
 
                 # 4.2 복원 진행 후, 레지스트 폴더에 저장
                 transform = transforms.Compose([transforms.ToTensor()])      # tensor 형태로 변환.
-                location = natsort.natsorted(os.listdir(os.path.join(os.getcwd(), 'dataset', '레지스트'))) # n개의 registration 적용 이미지 경로.
+                location = natsort.natsorted(os.listdir(os.path.join(os.getcwd(), 'dataset', 'regist'))) # n개의 registration 적용 이미지 경로.
 
                 class CustomDataset(Dataset):                                # Dataset으로 묶기.
                     def __init__(self, input_imgs):
@@ -199,7 +199,7 @@ def app():
                 # Data Loader 준비.
                 test = []
                 for i in location:
-                    test.append(transform(process_image(os.path.join(os.getcwd(), 'dataset', '레지스트') + '/' + i)))            
+                    test.append(transform(process_image(os.path.join(os.getcwd(), 'dataset', 'regist') + '/' + i)))            
                 test = CustomDataset(test)
                 if torch.cuda.is_available():
                     test_loader = DataLoader(test, batch_size=16, shuffle=False)                       # gpu면, batch 16
@@ -240,7 +240,7 @@ def app():
                         index += 1
                         j = sunmyung(j.detach().cpu())
                         name = location[index]
-                        tf_toPILImage(j).save(os.path.join(os.getcwd(), 'dataset', '레지스트', name))
+                        tf_toPILImage(j).save(os.path.join(os.getcwd(), 'dataset', 'regist', name))
 
         st.success('Reconstruction Complete!', icon="✅")
 
@@ -249,7 +249,7 @@ def app():
         # left_co, cent_co, last_co = st.columns(3)
         # with cent_co:
         with st.spinner('Performance evaluation in progress ...'):
-            location = natsort.natsorted(os.listdir(os.path.join(os.getcwd(), 'dataset', '레지스트'))) # n개의 registration 적용 이미지 경로.
+            location = natsort.natsorted(os.listdir(os.path.join(os.getcwd(), 'dataset', 'regist'))) # n개의 registration 적용 이미지 경로.
             a1 = []
             a2 = []
             a3 = []
@@ -259,8 +259,7 @@ def app():
                 ss = []
                 for j in location:
                     paths = os.path.join(recon_data, os.path.splitext(j)[0], os.path.basename(image))
-                    path = os.path.join(os.getcwd(), 'dataset', '레지스트', i)
-                    print(path)
+                    path = os.path.join(os.getcwd(), 'dataset', 'regist', i)
                     fixed, moving, _ = get_registration(paths, path)           # # fixed를 기준으로, moving 이미지를 변환
                     fixed, moving = sitk.GetArrayFromImage(fixed), sitk.GetArrayFromImage(moving)
                     mse_top, cos_top, ss_top = metrics(fixed, moving).rank()
@@ -360,7 +359,7 @@ def app():
         left_co, last_co = st.columns(2)
         with left_co:
             st.session_state.best_name = str(zz1[0][0]) + '.bmp'
-            st.image(os.path.join(os.getcwd(), 'dataset', '레지스트', st.session_state.best_name), width=300, caption= 'Best Reconstruction data')
+            st.image(os.path.join(os.getcwd(), 'dataset', 'regist', st.session_state.best_name), width=300, caption= 'Best Reconstruction data')
 
         with last_co:
             st.session_state.best_number = os.path.splitext(sorted(zz1[0][1].items(), key=lambda x:x[1], reverse=False)[0][0])[0][:-2]
@@ -398,7 +397,7 @@ def app():
             st.markdown("<p style='text-align: center; color: red; font-size:120%'> Reconstruction data </p>", unsafe_allow_html=True)
             for i in stqdm(st.session_state.df['클래스']):
                 st.markdown("<p style='text-align: center; font-size:90%'> </p>", unsafe_allow_html=True)
-                st.image(os.path.join(os.getcwd(), 'dataset', '레지스트', st.session_state.best_name), width=225, caption= 'Reconstruction data')
+                st.image(os.path.join(os.getcwd(), 'dataset', 'regist', st.session_state.best_name), width=225, caption= 'Reconstruction data')
 
         with cent_co:
             st.markdown("<p style='text-align: center; color: red; font-size:120%'> Performance </p>", unsafe_allow_html=True)
@@ -432,7 +431,7 @@ def app():
 
         # 폴더에 들어간 이미지와 레지스트 폴더 전체 삭제
         os.remove(os.path.join(os.getcwd(), 'dataset', os.path.basename(st.session_state.image)))
-        shutil.rmtree(os.path.join(os.getcwd(), 'dataset', '레지스트'))
+        shutil.rmtree(os.path.join(os.getcwd(), 'dataset', 'regist'))
 
 
 
@@ -440,8 +439,8 @@ def app():
     else:
         st.error("Please drag and drop file.")
         st.write(os.listdir(os.path.join(os.getcwd(), 'dataset')))
-        if os.path.isdir(os.path.join(os.getcwd(), 'dataset', '레지스트')):
-            shutil.rmtree(os.path.join(os.getcwd(), 'dataset', '레지스트'))
+        if os.path.isdir(os.path.join(os.getcwd(), 'dataset', 'regist')):
+            shutil.rmtree(os.path.join(os.getcwd(), 'dataset', 'regist'))
 
         if len(os.listdir(os.path.join(os.getcwd(), 'dataset'))) >= 2:
             os.remove(os.path.join(os.getcwd(), 'dataset', (os.listdir(os.path.join(os.getcwd(), 'dataset'))[0])))
