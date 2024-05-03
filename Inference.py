@@ -87,8 +87,6 @@ def app():
 
     st.markdown("<h1 style='text-align: center; color: black;'>Font Classification</h1>", unsafe_allow_html=True)
     st.subheader(":blue[When restarting, be sure to press F5.] :sunglasses:", divider='rainbow')
-    st.write(os.getcwd())
-    st.write(os.listdir(os.getcwd()))
     st.write(os.listdir(os.path.join(os.getcwd(), 'dataset')))
 
     st.write('한글 이름의 이미지 파일을 업로드 하세요. Ex) 가.bmp, 가.png ...')
@@ -116,7 +114,8 @@ def app():
         # 업로드 파일 저장(확장명을 모두 bmp파일로 변환. -> registration하기 위해서)
         save_upload_file('dataset', image)   
 
-
+        st.write(natsort.natsorted(os.listdir(os.path.join(os.getcwd(), 'dataset')))[-1])
+        
         # clearn 이미지, 저장한 이미지 경로 load
         recon_data = os.path.join(os.getcwd(), 'dataset', 'clearn_image')
         recon_data_numbers = natsort.natsorted(os.listdir(recon_data))
@@ -443,6 +442,6 @@ def app():
             shutil.rmtree(os.path.join(os.getcwd(), 'dataset', '레지스트'))
 
         if len(os.listdir(os.path.join(os.getcwd(), 'dataset'))) >= 2:
-            os.remove(os.path.join(os.getcwd(), 'dataset', (os.listdir(os.path.join(os.getcwd(), 'dataset'))[-1])))
+            os.remove(os.path.join(os.getcwd(), 'dataset', (os.listdir(os.path.join(os.getcwd(), 'dataset'))[0])))
 
 
