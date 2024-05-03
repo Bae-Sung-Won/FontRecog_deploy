@@ -18,13 +18,15 @@ import numpy as np
 import natsort
 import pandas as pd
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import seaborn as sns
 from copy import deepcopy
 from stqdm import stqdm
 import warnings 
 warnings.filterwarnings('ignore')
 
-# print(torch.__version__)
+print(torch.cuda.get_device_name(0),',', torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu'))
+print(torch.__version__)
 
 def save_upload_file(directory, file):
     if not os.path.exists(directory):
@@ -65,6 +67,13 @@ def save(file, name):
         with open(path, mode='w+b') as f:
             encoded_img.tofile(f)
 
+# 나눔고딕 폰트 추가 함수
+@st.cache_data
+def fontRegistered():
+    font_dirs = os.getcwd() + '/customFonts'
+    font_files = fm.findSystemFonts(fontpaths=font_dirs)
+    fm.fontManager.addfont(font_files[0])
+    fm._load_fontmanager(try_read_cache=False)
 
 # ------------------------------------------------------------------------------------------------------------------
 def app():
@@ -319,8 +328,12 @@ def app():
             st.session_state.df = tmp_df
 
         # 차트 그리기.
-        plt.rcParams['font.family'] ='Malgun Gothic'
-        plt.rcParams['axes.unicode_minus'] =False
+        # plt.rcParams['font.family'] ='Malgun Gothic'
+        # plt.rcParams['axes.unicode_minus'] =False
+        
+        # 나눔고딕 폰트 load.
+        fontRegistered()
+        plt.rc('font', family='NanumGothic')
         fig, ax = plt.subplots(1, 3, figsize=(18,8))
         palette = sns.color_palette("bright", 12)
 
@@ -424,4 +437,10 @@ def app():
 
     else:
         st.error("Please drag and drop file.")
-    
+        if os.path.isdir(os.path.join(os.getcwd(), 'dataset', '레지스트')):
+            shutil.rmtree(os.path.join(os.getcwd(), 'dataset', '레지스트'))
+
+        if len(os.listdir(os.path.join(os.getcwd(), 'dataset'))) >= 2:
+            os.remove(os.path.join(os.getcwd(), 'dataset', (os.listdir(os.path.join(os.getcwd(), 'dataset'))[-1])))
+
+
