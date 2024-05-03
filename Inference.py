@@ -25,7 +25,6 @@ from stqdm import stqdm
 import warnings 
 warnings.filterwarnings('ignore')
 
-print(torch.cuda.get_device_name(0),',', torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu'))
 print(torch.__version__)
 
 def save_upload_file(directory, file):
@@ -95,7 +94,7 @@ def app():
     with st.sidebar:
         st.markdown('<p style=color:black; "small-font">' +'Inference time 평균 4~5분 정도 소요'+ '</p>', unsafe_allow_html=True)
         st.write('available device: ', torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu'))
-        st.subheader('csv 파일을 다운 받으면, Restart', divider='rainbow')
+        st.subheader('csv 파일을 다운 받으면, 이미지 간 비교', divider='rainbow')
         st.markdown('<p style=color:red; "small-font">' +'1. MSE는 0에 가까울수록 유사'+ '</p>', unsafe_allow_html=True)
         st.markdown('<p style=color:blue; "small-font">' +'2. Cos는 1에 가까울수록 유사'+ '</p>', unsafe_allow_html=True)
         st.markdown('<p style=color:green; "small-font">' +'3. SSIM는 1에 가까울수록 유사'+ '</p>', unsafe_allow_html=True)
