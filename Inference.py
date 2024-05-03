@@ -112,8 +112,6 @@ def app():
 
         # 업로드 파일 저장(확장명을 모두 bmp파일로 변환. -> registration하기 위해서)
         save_upload_file('dataset', image)   
-
-        st.write(natsort.natsorted(os.listdir(os.path.join(os.getcwd(), 'dataset')))[-1])
         
         # clearn 이미지, 저장한 이미지 경로 load
         recon_data = os.path.join(os.getcwd(), 'dataset', 'clearn_image')
@@ -255,14 +253,15 @@ def app():
             a1 = []
             a2 = []
             a3 = []
-            st.write(location)
             for i in stqdm(location, desc='This is slow task'):
                 mse = []
                 cos = []
                 ss = []
+                time.sleep(0.1)
                 for j in location:
                     paths = os.path.join(recon_data, os.path.splitext(j)[0], os.path.basename(image))
                     path = os.path.join(os.getcwd(), 'dataset', '레지스트', i)
+                    st.image(path, width=300, caption= i)
                     fixed, moving, _ = get_registration(paths, path)           # # fixed를 기준으로, moving 이미지를 변환
                     fixed, moving = sitk.GetArrayFromImage(fixed), sitk.GetArrayFromImage(moving)
                     mse_top, cos_top, ss_top = metrics(fixed, moving).rank()
