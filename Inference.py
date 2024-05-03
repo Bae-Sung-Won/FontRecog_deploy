@@ -258,9 +258,10 @@ def app():
                 cos = []
                 ss = []
                 for j in location:
-                    print(os.path.join(os.getcwd(), 'dataset', '레지스트', i))
-                    paths = (os.path.join(recon_data, os.path.splitext(j)[0], os.path.basename(image))).replace('\\', '/')
-                    path = (os.path.join(os.getcwd(), 'dataset', '레지스트', i)).replace('\\', '/')
+                    paths = os.path.join(recon_data, os.path.splitext(j)[0], os.path.basename(image))
+                    path = os.path.join(os.getcwd(), 'dataset', '레지스트', i)
+                    print(path)
+                    print(sitk.ReadImage(path, sitk.sitkFloat32))
                     fixed, moving, _ = get_registration(paths, path)           # # fixed를 기준으로, moving 이미지를 변환
                     fixed, moving = sitk.GetArrayFromImage(fixed), sitk.GetArrayFromImage(moving)
                     mse_top, cos_top, ss_top = metrics(fixed, moving).rank()
