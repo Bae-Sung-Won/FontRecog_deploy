@@ -201,7 +201,7 @@ def app():
                 # Data Loader 준비.
                 test = []
                 for i in location:
-                    test.append(transform(process_image(os.path.join(os.getcwd(), 'dataset', '레지스트') + '\\' + i)))            
+                    test.append(transform(process_image(os.path.join(os.getcwd(), 'dataset', '레지스트') + '/' + i)))            
                 test = CustomDataset(test)                                                
                 test_loader = DataLoader(test, batch_size=16, shuffle=False)                       # DataLoader 넣기.
 
